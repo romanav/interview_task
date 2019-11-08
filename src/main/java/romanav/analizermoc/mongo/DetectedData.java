@@ -1,8 +1,9 @@
 package romanav.analizermoc.mongo;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
+import romanav.analizermoc.Entities.DetectorEntry;
 
-public interface DetectedData extends MongoRepository<String,String> {
+public interface DetectedData extends MongoRepository<DetectorEntry,String> {
 
-    String findByUuid(String uuid);
+    DetectorEntry findByUuid(String uuid);
 }
