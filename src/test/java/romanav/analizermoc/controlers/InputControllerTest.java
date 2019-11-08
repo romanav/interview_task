@@ -30,18 +30,17 @@ public class InputControllerTest {
 
     @Test
     public void writeEntry() throws Exception {
-        String json = readResource();
 
-        mvc.perform(MockMvcRequestBuilders.post("input/addEntry")
-                .content(json)
+        mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
+                .content(readResource("request.json"))
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
     }
 
-    private String readResource() throws IOException {
-        InputStream stream = this.getClass().getClassLoader().getResourceAsStream("request.json");
+    private String readResource(String path) throws IOException {
+        InputStream stream = this.getClass().getClassLoader().getResourceAsStream(path);
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readTree(stream).toString();
     }
