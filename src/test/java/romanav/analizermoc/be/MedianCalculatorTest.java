@@ -4,9 +4,8 @@ import org.assertj.core.util.Lists;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.awt.*;
+import java.util.List;
 import java.util.Arrays;
 import java.util.Collections;
 
@@ -21,7 +20,7 @@ public class MedianCalculatorTest {
 
     @Test
     public void nullTest(){
-        exceptionRule.expect(RuntimeException.class);
+        exceptionRule.expect(NullPointerException.class);
         exceptionRule.expectMessage("Cannot parse null");
         calc.calculate(null);
     }
@@ -40,8 +39,24 @@ public class MedianCalculatorTest {
     }
 
     @Test
+    public void testListObjectWasNotTouched(){
+        List<Integer> inputList = Arrays.asList(3,1,2);
+        calc.calculate(inputList);
+        assertThat(inputList).isEqualTo(Arrays.asList(3,1,2));
+    }
+
+    @Test
+    public void getMedianOfArrainWithOddNumberOfValues(){
+        assertThat(calc.calculate(Arrays.asList(30,15,22))).isEqualTo(22);
+        assertThat(calc.calculate(Arrays.asList(1,2,3,4))).isEqualTo(2.5);
+        assertThat(calc.calculate(Arrays.asList(1,2,3,4,5,6,7,8))).isEqualTo(4.5);
+    }
+
+
+    @Test
     public void nullInTheList(){
-        throw new NotImplementedException();
+        exceptionRule.expect(NullPointerException.class);
+        assertThat(calc.calculate(Arrays.asList(1,2,3,null))).isEqualTo(2.5);
     }
 
 
