@@ -59,6 +59,4 @@ public class MedianCalculatorTest {
         assertThat(calc.calculate(Arrays.asList(1,2,3,null))).isEqualTo(2.5);
     }
 
-
-//    public double calculate()
 }

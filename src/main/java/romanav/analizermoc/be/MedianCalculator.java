@@ -1,7 +1,5 @@
 package romanav.analizermoc.be;
 
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +16,7 @@ public class MedianCalculator {
             return copy.get(copy.size() / 2);
         }
         else{
-            int size = copy.size();
-            return medianOfTwoNumbers(copy.get(size/2)-1,copy.get(size/2));
+            return medianOfTwoNumbers(copy.get(copy.size()/2)-1,copy.get(copy.size()/2));
         }
     }
 
