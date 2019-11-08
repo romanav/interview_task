@@ -3,17 +3,10 @@ package romanav.analizermoc.Entities;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
-import java.util.List;
 
-public class DetectorEntry {
+public class DetectedDataEntry {
 
-//    {
-//
-//        "publisher": "publisher-id",
-//        "time": "2015-11-03 15:03:30.352",
-//         "median": 5
-//
-//    }
+
 
     @Id
     private String uuid;
@@ -21,8 +14,7 @@ public class DetectorEntry {
     private Date time;
     private double median;
 
-    public DetectorEntry(String uuid, String publisher, Date time, double median){
-        this.uuid = uuid;
+    public DetectedDataEntry(String publisher, Date time, double median){
         this.publisher = publisher;
         this.time = time;
         this.median = median;
