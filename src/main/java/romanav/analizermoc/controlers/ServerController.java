@@ -12,6 +12,7 @@ import romanav.analizermoc.Entities.DetectedDataEntry;
 import romanav.analizermoc.controlers.body.MedianGetterBody;
 import romanav.analizermoc.mongo.DetectedDataRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @ControllerAdvice
@@ -29,6 +30,11 @@ public class ServerController {
 
     @GetMapping("/server/getMedians")
     public List<DetectedDataEntry> getMedians(@RequestBody MedianGetterBody body){
+
+        if (body.getEntryCount() <= 0){
+            return Collections.emptyList();
+        }
+
         return repository.findByPublisherOrderByTimeDesc(body.getPublisher(), PageRequest.of(0,body.getEntryCount()));
     }
 

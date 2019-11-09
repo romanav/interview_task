@@ -46,7 +46,7 @@ public class MedianCalculatorTest {
     }
 
     @Test
-    public void getMedianOfArrainWithOddNumberOfValues(){
+    public void getMedians(){
         assertThat(calc.calculate(Arrays.asList(30,15,22))).isEqualTo(22);
         assertThat(calc.calculate(Arrays.asList(1,2,3,4))).isEqualTo(2.5);
         assertThat(calc.calculate(Arrays.asList(1,2,3,4,5,6,7,8))).isEqualTo(4.5);

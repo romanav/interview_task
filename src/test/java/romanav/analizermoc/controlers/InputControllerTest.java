@@ -35,7 +35,7 @@ public class InputControllerTest {
     private ObjectMapper mapper = new ObjectMapper();
 
     @Test
-    public void writeEntry() throws Exception {
+    public void testThatCanCallAPINoValidations() throws Exception {
 
         mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
                 .content(ResourceReader.read("request.json"))
