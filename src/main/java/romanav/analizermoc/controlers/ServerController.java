@@ -2,6 +2,8 @@ package romanav.analizermoc.controlers;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -27,11 +29,14 @@ public class ServerController {
 
     @GetMapping("/server/getMedians")
     public List<DetectedDataEntry> getMedians(@RequestBody MedianGetterBody body){
+        return repository.findByPublisherOrderByTimeDesc(body.getPublisher(), PageRequest.of(0,body.getEntryCount()));
 
-        List<DetectedDataEntry> values = repository.findByPublisher(body.getPublisher());
 
+//        Query query = new Query();
+//        query.with(Sort.by("time").descending());
+//        query.limit(body.getEntryCount());
+//        query.addCriteria(Criteria.where("publisher").is(body.getPublisher()));
 
-        return null;
-
+//        return repository.(query);
     }
 }

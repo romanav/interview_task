@@ -16,7 +16,7 @@ public class MedianCalculator {
             return copy.get(copy.size() / 2);
         }
         else{
-            return medianOfTwoNumbers(copy.get(copy.size()/2)-1,copy.get(copy.size()/2));
+            return medianOfTwoNumbers(copy.get(copy.size()/2-1),copy.get(copy.size()/2));
         }
     }
 

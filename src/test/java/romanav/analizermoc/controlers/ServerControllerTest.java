@@ -1,6 +1,7 @@
 package romanav.analizermoc.controlers;
 
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -13,13 +14,15 @@ import org.springframework.data.mongodb.core.aggregation.ArrayOperators;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import romanav.analizermoc.utils.ResourceReader;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
@@ -30,29 +33,40 @@ public class ServerControllerTest {
     @Autowired
     private MockMvc mvc;
 
+    private ObjectMapper mapper = new ObjectMapper();
+    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+
     @Test
-    public void writeEntry() throws Exception {
+    public void fetchTwoLastEntriesInTimeDescendingOrder() throws Exception {
 
 
         Date date1 = new Date();
         Date date2 = new Date();
         Date date3 = new Date();
 
-        addTestData(date1);
-        addTestData(date2);
-        addTestData(date3);
+        addTestData(date1, Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
+        addTestData(date2, Arrays.asList(1, 2, 3, 4, 5, 6));
+        addTestData(date3, Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
 
-
-        mvc.perform(MockMvcRequestBuilders.get("/server/getMedians")
-                .content(ResourceReader.read("publisher_read.json"))
+        MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/server/getMedians")
+                .content("{\"publisher\" : \"publisher_1\", \"entryCount\": 2}")
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+                .andExpect(status().isOk()).andReturn();
 
-    }
+        JsonNode resultValues = mapper.readTree(result.getResponse().getContentAsString());
+        assertThat(resultValues.size()).isEqualTo(2);
 
-    private void addTestData(Date date1) throws Exception {
-        ObjectNode node = getTestDataNode(date1);
+        assertThat(resultValues.get(0).get("time").asText()).isEqualTo(simpleDateFormat.format(date2));
+        assertThat(resultValues.get(0).get("median").asDouble()).isEqualTo(10.5);
+
+        assertThat(resultValues.get(1).get("time").asText()).isEqualTo(simpleDateFormat.format(date3));
+        assertThat(resultValues.get(1).get("median").asDouble()).isEqualTo(3.5);
+
+   }
+
+    private void addTestData(Date date,  List<Integer> inputData) throws Exception {
+        ObjectNode node = getTestDataNode(date,  inputData);
 
 
         mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
@@ -62,16 +76,16 @@ public class ServerControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ObjectNode getTestDataNode( Date date1) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
-        ObjectMapper mapper = new ObjectMapper();
+    private ObjectNode getTestDataNode(Date date, List<Integer> inputData) {
+
+
         ObjectNode node = mapper.createObjectNode();
 
         node.put("publisher", "publisher_1");
-        node.put("time", format.format(date1));
+        node.put("time", simpleDateFormat.format(date));
 
         ArrayNode arrayNode = mapper.createArrayNode();
-        for (Integer i : Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4)){
+        for (Integer i : inputData){
             arrayNode.add(i);
         }
 
@@ -80,3 +94,4 @@ public class ServerControllerTest {
     }
 
 }
+

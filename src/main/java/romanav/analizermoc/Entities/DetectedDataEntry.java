@@ -1,12 +1,11 @@
 package romanav.analizermoc.Entities;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springframework.data.annotation.Id;
 
 import java.util.Date;
 
 public class DetectedDataEntry {
-
-
 
     @Id
     private String uuid;
@@ -20,4 +19,16 @@ public class DetectedDataEntry {
         this.median = median;
     }
 
+    public String getPublisher() {
+        return publisher;
+    }
+
+    @JsonFormat(pattern="yyyy-MM-dd HH:mm:ss.SSS", timezone = "UTC")
+    public Date getTime() {
+        return time;
+    }
+
+    public double getMedian() {
+        return median;
+    }
 }
