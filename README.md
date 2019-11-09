@@ -5,7 +5,7 @@ I had several concerns how to implement that project:
 1) For E2E Automation, I recommend to do black box testing, but I don't have relevant system (Description of E2E test that should be done, below). We do black box testing because intervetion to the system work can cause for escaping bugs,  we can mock inputs and run databases with predefined data. In that case we can generate mock for "publisher" and we can set database with predefined data, then write tests that will operate that data.
 
 # Solution
-In reason of described constrains I decide to write micro service that can read data and store in MongoDB in requested format (No kafka involved).This Solution contains one micro service, but it should be split to 2 micro-services. One read data, second fetch data. I put it in one project because, to make think more visible and simple. 
+In reason of described constrains I decide to write micro service that can read data and store in MongoDB in requested format (No kafka involved).This Solution contains one micro service, but it should be split to 2 micro-services. One read data, second fetch data. I put it in one project in reason to make things more visible and simple. 
 
 In reason we have micro services only, that not connected to the working system, it's meaningless to do black box E2E testing. Micro-service testing (component testing) better to do in level of unit tests and component test, because unit testing and component testing catch failures when code is compiling and developer get fast response about code quality. 
 
