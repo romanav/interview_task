@@ -16,9 +16,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import romanav.analizermoc.utils.JsonInputGenerator;
 
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -34,7 +36,7 @@ public class ServerControllerTest {
     private MockMvc mvc;
 
     private ObjectMapper mapper = new ObjectMapper();
-    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
+    private SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS");
 
     @Test
     public void fetchTwoLastEntriesInTimeDescendingOrder() throws Exception {
@@ -65,20 +67,8 @@ public class ServerControllerTest {
 
    }
 
-
-   @Test
-   public void trySendNull() throws Exception {
-       ObjectNode json = getTestDataNode("publisher_1", new Date(), Arrays.asList(1, 2, 3, null, 5, 6));
-
-       mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
-               .content(json.toString())
-               .contentType(MediaType.APPLICATION_JSON)
-               .accept(MediaType.APPLICATION_JSON))
-               .andExpect(status().isBadRequest());
-    }
-
     private void addTestData(String publisher, Date date,  List<Integer> inputData) throws Exception {
-        ObjectNode node = getTestDataNode(publisher, date,  inputData);
+        ObjectNode node = JsonInputGenerator.getTestDataNode(publisher, date,  inputData);
 
 
         mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
@@ -88,22 +78,7 @@ public class ServerControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ObjectNode getTestDataNode(String publisher, Date date, List<Integer> inputData) {
 
-
-        ObjectNode node = mapper.createObjectNode();
-
-        node.put("publisher", publisher);
-        node.put("time", simpleDateFormat.format(date));
-
-        ArrayNode arrayNode = mapper.createArrayNode();
-        for (Integer i : inputData){
-            arrayNode.add(i);
-        }
-
-        node.putPOJO("readings", arrayNode);
-        return node;
-    }
 
 }
 

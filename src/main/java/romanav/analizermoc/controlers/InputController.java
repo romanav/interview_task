@@ -11,7 +11,6 @@ import romanav.analizermoc.be.MedianCalculator;
 import romanav.analizermoc.controlers.body.DetectorData;
 import romanav.analizermoc.mongo.DetectedDataRepository;
 
-import java.util.logging.Logger;
 
 
 @ControllerAdvice
@@ -29,6 +28,10 @@ public class InputController {
 
     @PostMapping("/input/addEntry")
     public void addEntry(@RequestBody DetectorData data){
+        if (data.getTime() == null){
+            throw new NullPointerException("time field is null");
+        }
+
         logger.info(String.format("Adding entry: %s, %s, %s",data.getPublisher(), data.getReadings(), data.getTime()));
         MedianCalculator calc = new MedianCalculator();
         DetectedDataEntry entry = new DetectedDataEntry(data.getPublisher(), data.getTime(), calc.calculate(data.getReadings()));
