@@ -9,7 +9,9 @@ In reason of described constrains I decide to write micro service that can read 
 
 In reason we have single micro service only, that not connected to the working system with kafka, it's meaningless to do black box E2E testing. Micro-service testing (component testing) better to do in level of unit tests and component test, because unit testing and component testing catch failures when code is compiling and developer get fast response about code quality. 
 
-* In addition, I have implimented project using TDD approach (I know it's important for you :) )
+In addition: 
+1) I have implimented project using TDD approach (I know it's important for you :) )
+1) We can impliment median search algorithm in O(n), current implimentation in O(nlogn) in reason of time constrains
 
 To compile project, fist need to start MongoDB service, run mongo_start.yml with docker compose from root directory of the project. 
 ```
@@ -20,6 +22,8 @@ Run "mvn install" from the root. Project  will compile and run unit tests that c
 ```
 mvn install
 ```
+
+
 
 ## Service implimentation description
 Service expose following API:
