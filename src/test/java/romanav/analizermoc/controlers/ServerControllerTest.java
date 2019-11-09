@@ -66,7 +66,9 @@ public class ServerControllerTest {
         assertThat(resultValues.get(0).get("publisher").asText()).isEqualTo("publisher_1");
 
         assertThat(resultValues.get(1).get("time").asText()).isEqualTo(simpleDateFormat.format(date3));
+        assertThat(resultValues.get(1).get("median").asDouble()).isEqualTo(3.5);
         assertThat(resultValues.get(1).get("publisher").asText()).isEqualTo("publisher_1");
+
    }
 
    @Test
@@ -102,7 +104,6 @@ public class ServerControllerTest {
         JsonNode resultValues = mapper.readTree(result.getResponse().getContentAsString());
         assertThat(resultValues.size()).isEqualTo(0);
     }
-
 
     private void addTestData(String publisher, Date date,  List<Integer> inputData) throws Exception {
         ObjectNode node = JsonInputGenerator.getTestDataNode(publisher, date,  inputData);
