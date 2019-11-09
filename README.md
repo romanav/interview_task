@@ -2,9 +2,7 @@
 I had several concerns how to implement that project:
 
 1) I'm not familiar how to use Kafaka APIs ( I know concepts but never made hands on) - so cannot do it in time constrains that were set.
-1) For E2E Automation, I recommend to do black box testing, but I don't have relevant system (Description of E2E test that should be done, below). We do black box testing because intervetion to the system work can cause for escaping bugs,  we can mock inputs and run databases with predefined data.
-
-In that case we can generate mock for "publisher" and we can set database with predefined data, then write tests that will operate that data.
+1) For E2E Automation, I recommend to do black box testing, but I don't have relevant system (Description of E2E test that should be done, below). We do black box testing because intervetion to the system work can cause for escaping bugs,  we can mock inputs and run databases with predefined data. In that case we can generate mock for "publisher" and we can set database with predefined data, then write tests that will operate that data.
 
 # Solution
 In reason of described constrains I decide to write micro service that can read data and store in MongoDB in requested format (No kafka involved).This Solution contains one micro service, but it should be split to 2 micro-services. One read data, second fetch data. I put it in one project because, to make think more visible and simple. 
