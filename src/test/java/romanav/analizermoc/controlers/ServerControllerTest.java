@@ -70,7 +70,6 @@ public class ServerControllerTest {
     private void addTestData(String publisher, Date date,  List<Integer> inputData) throws Exception {
         ObjectNode node = JsonInputGenerator.getTestDataNode(publisher, date,  inputData);
 
-
         mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
                 .content(node.toString())
                 .contentType(MediaType.APPLICATION_JSON)
