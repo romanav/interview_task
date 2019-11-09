@@ -1,0 +1,62 @@
+version: "3"
+ 
+services:
+
+  mongo:
+    image: mongo
+    hostname: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - /tmp/mongodbdata:/data/
+    deploy:
+      resources:
+        reservations:
+          cpus: '0.25'
+      placement:
+        constraints: 
+          - node.role == manager
+      restart_policy:
+        condition: any
+      mode: replicated
+      replicas: 1
+ 
+      update_config:
+        delay: 2s
+      update_config:
+        delay: 2s
+    networks:
+      - net
+
+  mongoexpress:
+    image: mongo-express
+    hostname: mongo-express
+    ports:
+      - "8081:8081"
+    environment:
+      - WEB_USER=user
+      - WEB_PASS=pass
+      - ME_CONFIG_MONGODB_SERVER=mongo
+    command: sh -c 'sleep 10 && tini -- node app'
+    depends_on:
+      - mongo
+    deploy:
+      placement:
+        constraints: 
+          - node.role == manager
+      restart_policy:
+        condition: any
+      mode: replicated
+      replicas: 1
+
+      update_config:
+        delay: 2s
+      update_config:
+        delay: 2s
+    networks:
+      - net
+
+        
+networks:
+  net:
+
