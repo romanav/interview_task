@@ -1,15 +1,17 @@
 # Intoruction
 I had several concerns how to implement that project:
 
-1) I'm not familiar how to use Kafaka APIs(I do know concepts but have time issue to learn it right now)
-1) For E2E Automation I do recommend to do black box testing, but I don't have relevant system. We do black box testing because intervetion to the system work can cause to escaping bugs, for sure we can mock inputs and run databases with predefined data.
+1) I'm not familiar how to use Kafaka APIs ( I know concepts but never made hands on)
+1) For E2E Automation, I recommend to do black box testing, but I don't have relevant system (Description of E2E test that should be done, below). We do black box testing because intervetion to the system work can cause for escaping bugs,  we can mock inputs and run databases with predefined data.
 
 In that case we can generate mock for "publisher" and we can set database with predefined data, then write tests that will operate that data.
 
 # Solution
-In reason of described constrains I decide to write micro service that knows how to populate DB with data (without Kafka) and also can provide median.
-Micro-service testing (component testing) better to do in level of unit tests and component test.
-Reason to do unit testing and component testing is to catch failures when code is compiling. In that case developer will get fast response.
+In reason of described constrains I decide to write micro service that can read data and store in MongoDB in requested format (No kafka involved).This Solution contains one micro service, but it should be split to 2 micro-services. One read data, second fetch data. I put it in one project because, to make think more visible and simple. 
+
+In reason we have micro services only, that not connected to the working system, it's meaningless to do black box E2E testing. Micro-service testing (component testing) better to do in level of unit tests and component test, because unit testing and component testing catch failures when code is compiling and developer get fast response about code quality. 
+
+* In addition, I have implimented project in with TDD approach (I know it's important for you :) )
 
 To compile project, fist need to start MongoDB service, run mongo_start.yml with docker compose from root directory of the project. 
 ```
@@ -31,19 +33,23 @@ Service expose following API:
   "entryCount": 1
 }
 ```
-In current solution I use mongoDb as dependancy for compilation that is not best way to do that, to run unit tests we can also MOC DB too, and compile code without running mongo. 
+In current solution I use mongoDb as dependancy for compilation that is not best way to do that, to run unit tests we can also MOC DB too, and compile code without running mongo. We can do it with several libraries that we have online. Also adapter desing pattern can be used here to avoid dependancy on specific DB
 
  
 
 # Required E2E Solution
 ## System configuration
 I see the entire working system in following way:
+
+"Publisher" ---write---> "Kafka" <---read---- "Workers"  ----write---> "DB" <---read--- "Server" <---read----"UI"
+
 1) We have data publishers that write data To Kafka 
 1) "Worker" micor-service pull data from Kafka, calculate Median and put it in DB
-1) To provide fast responce, high avialability it's better to use several workers 
-1) Server pull data data from DB for requested worker
-1) UI micro-service work directly with Server and request for relevant data for relevant worker
-1) Also we can use load balancing and utilize several "Servers" micro-services to pull data from DB to provide high avialiability
+   To provide fast responce and high avialability it's better to use several workers 
+1) "Server" pull data data from DB for requested worker
+   We can use load balancing and utilize several "Servers" micro-services to pull data from DB to provide high avialiability
+1) "UI micro-service" work directly with Server and request for relevant data for relevant worker
+   
 
 ## E2E automation configuration
 1) E2E test connect to workers or mimic their behaviour and publish data to the system (we can populate data as predifined set of values stored in file or generated in random way)
