@@ -42,14 +42,14 @@ I see the entire working system in following way:
 "Publisher" ---write---> "Kafka" <---read---- "Workers"  ----write---> "DB" <---read--- "Server" <---read----"UI"
 
 1) We have data publishers that write data To Kafka.
-1) "Worker" micor-service pull data from Kafka, calculate Median and put it in DB.
+1) "Worker" mico-service pull data from Kafka, calculate Median and put it in DB.
    To provide fast responce and high avialability it's better to use several workers 
 1) "Server" pull data data from DB. 
     To provide high avialiability we can use load balancing approach (Ngnix or Traefik) to run several "Servers".
 1) "UI micro-service" work directly with Server and request for relevant data for relevant worker
    
 
-## E2E automation configuration
+## E2E automation that should be implimented for that system
 1) E2E test connect to workers or mimic their behaviour. Then publish data to the system (we can populate data as predifined set of values stored in file/db or generated in random way)
 1) API tests can request for data and see if data returned in correct way.
 1) In that system it's  better to add "Chaos Monkey" that will delete "Worker" and "Server" micro-services, and in that way we will able to see if the system can tolerate failures.
