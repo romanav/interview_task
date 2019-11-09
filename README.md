@@ -43,19 +43,19 @@ I see the entire working system in following way:
 
 "Publisher" ---write---> "Kafka" <---read---- "Workers"  ----write---> "DB" <---read--- "Server" <---read----"UI"
 
-1) We have data publishers that write data To Kafka 
-1) "Worker" micor-service pull data from Kafka, calculate Median and put it in DB
+1) We have data publishers that write data To Kafka.
+1) "Worker" micor-service pull data from Kafka, calculate Median and put it in DB.
    To provide fast responce and high avialability it's better to use several workers 
-1) "Server" pull data data from DB for requested worker
-   We can use load balancing and utilize several "Servers" micro-services to pull data from DB to provide high avialiability
+1) "Server" pull data data from DB. 
+    To provide high avialiability we can use load balancing approach (Ngnix or Traefik) to run several "Servers".
 1) "UI micro-service" work directly with Server and request for relevant data for relevant worker
    
 
 ## E2E automation configuration
-1) E2E test connect to workers or mimic their behaviour and publish data to the system (we can populate data as predifined set of values stored in file or generated in random way)
-1) API tests can request for data and see if data returned in correct way
-1) In that system it's  better to add "Chaos Monkey" that will delete "Worker" micro-services, and in that way we will able to see if the system can tolerate failures.
-1) We need add load testing and populate data in very fast manner to check if system can handle it without loosing data and without micro-service hangs or crashes
+1) E2E test connect to workers or mimic their behaviour. Then publish data to the system (we can populate data as predifined set of values stored in file/db or generated in random way)
+1) API tests can request for data and see if data returned in correct way.
+1) In that system it's  better to add "Chaos Monkey" that will delete "Worker" and "Server" micro-services, and in that way we will able to see if the system can tolerate failures.
+1) We need add load testing and populate data in very fast manner to check if system can handle it, without loosing data and without micro-service hangs or crashes
 1) We need to check how system handle the big data. Connect database with huge amount of data (amount of data based on customers perspective) and check if system will handle it and will respond fast
 1) Need to run UI test to validate that system behave in correct way (also can be done as component tests of UI micro-service)
 
