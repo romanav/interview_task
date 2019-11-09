@@ -14,7 +14,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import romanav.analizermoc.utils.ResourceReader;
 
-import java.io.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 

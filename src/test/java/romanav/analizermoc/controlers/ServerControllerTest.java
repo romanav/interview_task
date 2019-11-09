@@ -39,14 +39,13 @@ public class ServerControllerTest {
     @Test
     public void fetchTwoLastEntriesInTimeDescendingOrder() throws Exception {
 
-
-        Date date1 = new Date();
         Date date2 = new Date();
         Date date3 = new Date();
 
-        addTestData(date1, Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
-        addTestData(date2, Arrays.asList(1, 2, 3, 4, 5, 6));
-        addTestData(date3, Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
+        addTestData("publisher_1", new Date(), Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
+        addTestData("publisher_1", date2, Arrays.asList(1, 2, 3, 4, 5, 6));
+        addTestData("publisher_1", date3, Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
+        addTestData("publisher_2", new Date(), Arrays.asList(1, 13, 192, 7, 8, 99, 1014, 4));
 
         MvcResult result = mvc.perform(MockMvcRequestBuilders.get("/server/getMedians")
                 .content("{\"publisher\" : \"publisher_1\", \"entryCount\": 2}")
@@ -59,14 +58,27 @@ public class ServerControllerTest {
 
         assertThat(resultValues.get(0).get("time").asText()).isEqualTo(simpleDateFormat.format(date2));
         assertThat(resultValues.get(0).get("median").asDouble()).isEqualTo(10.5);
+        assertThat(resultValues.get(0).get("publisher").asText()).isEqualTo("publisher_1");
 
         assertThat(resultValues.get(1).get("time").asText()).isEqualTo(simpleDateFormat.format(date3));
-        assertThat(resultValues.get(1).get("median").asDouble()).isEqualTo(3.5);
+        assertThat(resultValues.get(1).get("publisher").asText()).isEqualTo("publisher_1");
 
    }
 
-    private void addTestData(Date date,  List<Integer> inputData) throws Exception {
-        ObjectNode node = getTestDataNode(date,  inputData);
+
+   @Test
+   public void trySendNull() throws Exception {
+       ObjectNode json = getTestDataNode("publisher_1", new Date(), Arrays.asList(1, 2, 3, null, 5, 6));
+
+       mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
+               .content(json.toString())
+               .contentType(MediaType.APPLICATION_JSON)
+               .accept(MediaType.APPLICATION_JSON))
+               .andExpect(status().isBadRequest());
+    }
+
+    private void addTestData(String publisher, Date date,  List<Integer> inputData) throws Exception {
+        ObjectNode node = getTestDataNode(publisher, date,  inputData);
 
 
         mvc.perform(MockMvcRequestBuilders.post("/input/addEntry")
@@ -76,12 +88,12 @@ public class ServerControllerTest {
                 .andExpect(status().isOk());
     }
 
-    private ObjectNode getTestDataNode(Date date, List<Integer> inputData) {
+    private ObjectNode getTestDataNode(String publisher, Date date, List<Integer> inputData) {
 
 
         ObjectNode node = mapper.createObjectNode();
 
-        node.put("publisher", "publisher_1");
+        node.put("publisher", publisher);
         node.put("time", simpleDateFormat.format(date));
 
         ArrayNode arrayNode = mapper.createArrayNode();
