@@ -58,7 +58,15 @@ public class ServerControllerTest {
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
 
-        assertThat2ValuesReturnedInDescendingOrder(date2, date3, result);
+        JsonNode resultValues = mapper.readTree(result.getResponse().getContentAsString());
+        assertThat(resultValues.size()).isEqualTo(2);
+
+        assertThat(resultValues.get(0).get("time").asText()).isEqualTo(simpleDateFormat.format(date2));
+        assertThat(resultValues.get(0).get("median").asDouble()).isEqualTo(10.5);
+        assertThat(resultValues.get(0).get("publisher").asText()).isEqualTo("publisher_1");
+
+        assertThat(resultValues.get(1).get("time").asText()).isEqualTo(simpleDateFormat.format(date3));
+        assertThat(resultValues.get(1).get("publisher").asText()).isEqualTo("publisher_1");
    }
 
    @Test
@@ -95,18 +103,6 @@ public class ServerControllerTest {
         assertThat(resultValues.size()).isEqualTo(0);
     }
 
-
-    private void assertThat2ValuesReturnedInDescendingOrder(Date date2, Date date3, MvcResult result) throws IOException {
-        JsonNode resultValues = mapper.readTree(result.getResponse().getContentAsString());
-        assertThat(resultValues.size()).isEqualTo(2);
-
-        assertThat(resultValues.get(0).get("time").asText()).isEqualTo(simpleDateFormat.format(date2));
-        assertThat(resultValues.get(0).get("median").asDouble()).isEqualTo(10.5);
-        assertThat(resultValues.get(0).get("publisher").asText()).isEqualTo("publisher_1");
-
-        assertThat(resultValues.get(1).get("time").asText()).isEqualTo(simpleDateFormat.format(date3));
-        assertThat(resultValues.get(1).get("publisher").asText()).isEqualTo("publisher_1");
-    }
 
     private void addTestData(String publisher, Date date,  List<Integer> inputData) throws Exception {
         ObjectNode node = JsonInputGenerator.getTestDataNode(publisher, date,  inputData);
