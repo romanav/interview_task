@@ -1,4 +1,4 @@
-#Intoruction
+# Intoruction
 I had several concerns how to implement that project:
 
 1) I'm not familiar how to use Kafaka APIs(I do know concepts but have time issue to learn it right now)
@@ -6,7 +6,7 @@ I had several concerns how to implement that project:
 
 In that case we can generate mock for "publisher" and we can set database with predefined data, then write tests that will operate that data.
 
-#Solution
+# Solution
 In reason of described constrains I decide to write micro service that knows how to populate DB with data (without Kafka) and also can provide median.
 Micro-service testing (component testing) better to do in level of unit tests and component test.
 Reason to do unit testing and component testing is to catch failures when code is compiling. In that case developer will get fast response.
@@ -21,7 +21,7 @@ Run "mvn install" from the root. Project  will compile and run unit tests that c
 mvn install
 ```
 
-##Service implimentation description
+## Service implimentation description
 Service expose to APIs 
 "POST /input/addEntry" to write new entry with body in requested json format
 "GET /server/getMedians" to get specific publisher medians. Request body format: 
@@ -31,7 +31,7 @@ Service expose to APIs
   "entryCount": 1
 }
 ```
-
+In current solution I use mongoDb as dependancy for compilation that is not best way to do that, to run unit tests we can also MOC DB too, and compile code without running mongo. 
 
  
 
