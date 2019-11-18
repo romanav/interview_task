@@ -1,3 +1,40 @@
+# Task
+We'd like to build an outlier detection system. There are data publishers that post sensor data to a Kafka as message broker. There is a data consumer that uses the data and stores to a database a processed form of the data. There is a server that provides insights on the stored data. You job is to write two things:
+
+Consumer
+The consumer to the message broker that listens to messages on the Kafka system. Messages are JSON strings in the format:
+
+{
+
+    "publisher": "publisher-id",
+
+    "time": "2015-11-03 15:03:30.352",
+
+    "readings": [ 1, 13, 192, 7, 8, 99, 1014, 4]
+
+}
+
+The consumer should store the median of the readings with time and publisher id to a database of your choosing.
+
+Web Server
+The web server should read display outliers for a given publisher. It should pull data from the database per publisher. And display reading and mark outliers for the last N readings.
+
+Testing
+You should write a dummy publisher to your system and have a full end-to-end test to the system.
+
+There should be one script to run the full end-to-end test.
+
+Deploying
+Provide a way to install the system on a new machine with one script. Points to consider:
+
+Installing dependencies
+
+Install database and initializing it
+
+How to handle code updates
+
+
+
 # Intoruction
 I had several concerns how to implement that project:
 
